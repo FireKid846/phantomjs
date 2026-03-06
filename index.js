@@ -1,6 +1,6 @@
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
-const express = require('express');
 require('dotenv').config();
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const http = require('http');
 
 // ── Validate env ──────────────────────────────────────────────────────────────
 if (!process.env.DISCORD_TOKEN)      { console.error('❌ DISCORD_TOKEN is required');      process.exit(1); }
@@ -8,6 +8,16 @@ if (!process.env.GUILD_ID)           { console.error('❌ GUILD_ID is required')
 if (!process.env.OWNER_ID)           { console.error('❌ OWNER_ID is required');           process.exit(1); }
 if (!process.env.TURSO_DATABASE_URL) { console.error('❌ TURSO_DATABASE_URL is required'); process.exit(1); }
 if (!process.env.TURSO_AUTH_TOKEN)   { console.error('❌ TURSO_AUTH_TOKEN is required');   process.exit(1); }
+
+// ── Health server FIRST (so Render doesn't kill us before login) ──────────────
+const PORT = process.env.PORT || 3000;
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ status: 'ok', uptime: process.uptime() }));
+});
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🌐 Health server running on port ${PORT}`);
+});
 
 // ── Discord client ────────────────────────────────────────────────────────────
 const client = new Client({
@@ -26,38 +36,13 @@ require('./src/handlers/commandHandler')(client);
 require('./src/handlers/eventHandler')(client);
 require('./src/handlers/errorHandler')(client);
 
-// ── Health server (starts after bot is ready, just like Synapse) ──────────────
-const startHealthServer = () => {
-  const app = express();
-  const PORT = process.env.PORT || 3000;
-  app.use(express.json());
-  app.get('/',       (req, res) => res.json({ status: 'online', bot: client.user?.tag, uptime: process.uptime() }));
-  app.get('/health', (req, res) => res.json({ status: 'online', bot: client.user?.tag, uptime: process.uptime() }));
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🌐 Health server running on port ${PORT}`);
-  });
-};
-
-// ── Ready event (inline, just like Synapse) ───────────────────────────────────
-client.once('ready', () => {
-  console.log(`✅ Logged in as ${client.user.tag}`);
-  console.log(`📊 Serving ${client.guilds.cache.size} guild(s)`);
-
-  startHealthServer();
-});
-
 // ── Shutdown ──────────────────────────────────────────────────────────────────
-process.on('SIGINT',  () => { client.destroy(); process.exit(0); });
-process.on('SIGTERM', () => { client.destroy(); process.exit(0); });
+process.on('SIGINT',  () => { server.close(); client.destroy(); process.exit(0); });
+process.on('SIGTERM', () => { server.close(); client.destroy(); process.exit(0); });
+process.on('unhandledRejection', (reason) => console.error('❌ Unhandled Rejection:', reason));
+process.on('uncaughtException',  (err)    => console.error('❌ Uncaught Exception:', err.message));
 
-process.on('unhandledRejection', (reason) => {
-  console.error('❌ Unhandled Rejection:', reason);
-});
-process.on('uncaughtException', (err) => {
-  console.error('❌ Uncaught Exception:', err.message);
-});
-
-// ── Start (same pattern as Synapse) ──────────────────────────────────────────
+// ── Start ─────────────────────────────────────────────────────────────────────
 async function start() {
   console.log('🚀 Starting Phantom...');
   await client.login(process.env.DISCORD_TOKEN);
