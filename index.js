@@ -14,7 +14,6 @@ console.log('\n🔍 [1/5] Validating environment variables...');
 
 const requiredEnv = [
   'DISCORD_TOKEN',
-  'CLIENT_ID',
   'GUILD_ID',
   'OWNER_ID',
   'TURSO_DATABASE_URL',
