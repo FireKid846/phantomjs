@@ -1,0 +1,79 @@
+{
+  "channels": {
+    "announcements": "1479071203749531794",
+    "changelog": "1479099699511427094",
+    "roadmap": "1479099849659125913",
+    "applications": "1479101439585554513",
+    "accepted": "1479101492102430821",
+    "welcome": "1479134597882314794",
+    "help": "1479100406901772431",
+    "roles": "1479134864337797233",
+    "bug-reports": "1479100328350715936",
+    "showcase": "1479104670122115122",
+    "off-topic": "1479100651459051564",
+    "hurl": "1479100111224045631",
+    "once": "1479100164181459144",
+    "general": "1479100201284141246",
+    "team": "",
+    "maintainers": "1479101052929441862",
+    "contributors": "1479101106343907519",
+    "internal": "1479101139797540934",
+    "apply-here": "1479101377165922447"
+  },
+  "roles": {
+    "firekid": "1479106182433210489",
+    "maintainer": "1479106377883451596",
+    "contributor": "1479106501409902766",
+    "member": "1479107100876603484",
+    "active_member": "1479107023663792301",
+    "veteran": "1479106925793640580",
+    "hurl_user": "1479107186390073354",
+    "once_user": "1479107244611080343",
+    "beta_tester": "1479107329558581370",
+    "bug_hunter": "1479140243427819637",
+    "early_adopter": "1479140361204006932"
+  },
+  "antilink": {
+    "enabled": true,
+    "whitelist_domains": [
+      "npmjs.com",
+      "github.com",
+      "hurl.firekidofficial.name.ng"
+    ],
+    "exempt_channels": [
+      "announcements",
+      "changelog",
+      "showcase",
+      "off-topic"
+    ],
+    "warn_limit_kick": 3,
+    "warn_limit_ban": 5
+  },
+  "npm": {
+    "packages": [
+      "@firekid/hurl",
+      "@firekid/once"
+    ],
+    "poll_interval_minutes": 10
+  },
+  "github": {
+    "owner": "Firekid-is-him",
+    "repos": {
+      "hurl": {
+        "changelog": "CHANGELOG.md",
+        "branch": "main"
+      },
+      "once": {
+        "changelog": "CHANGELOG.md",
+        "branch": "main"
+      }
+    }
+  },
+  "activity": {
+    "active_member_days": 30,
+    "veteran_days": 180
+  },
+  "welcome": {
+    "message": "Welcome to **Firekid Packages**! Check out <1479134864337797233> to pick your roles and <1479100651459051564> to introduce yourself."
+  }
+}
